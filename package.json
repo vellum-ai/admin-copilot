@@ -1,0 +1,15 @@
+{
+  "name": "admin-copilot",
+  "version": "0.1.0",
+  "description": "Proactive chief-of-staff for Vellum assistants: a morning digest, propose-then-confirm inbox triage, calendar prep, and a weekly competitor brief. Composes existing email/calendar/digest/scheduling capabilities and adds recurring competitor research.",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20.12.0"
+  },
+  "peerDependencies": {
+    "@vellumai/plugin-api": "^0.8.0"
+  },
+  "vellum": {}
+}
