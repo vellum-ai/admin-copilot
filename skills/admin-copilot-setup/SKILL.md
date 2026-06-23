@@ -30,8 +30,9 @@ Stand up a proactive admin assistant in one guided pass, then get out of the
 way. Four pillars, each independently optional:
 
 1. **Morning digest** — calendar + inbox triage + competitor deltas + follow-ups.
-2. **Inbox triage** — ongoing, **propose-then-confirm** (delegated to
-   `inbox-management`; never auto-sends, archives only what the user approves).
+2. **Inbox triage** — ongoing (delegated to `inbox-management`; never auto-sends).
+   Starts **propose-then-confirm**; the user can opt into automatic archiving of
+   known-safe noise at setup or graduate to it later.
 3. **Calendar prep** — surfaced inside the digest (meeting prep, gaps, conflicts).
 4. **Weekly competitor brief** — only what materially changed (`competitor-brief`).
 
@@ -74,9 +75,17 @@ Persist choices with `admin_copilot_prefs` `set_prefs`. The `prefs_patch` shape:
 
 - **Digest time:** ask; default 7:00am weekdays (`0 7 * * 1-5`).
 - **Delivery channel** per pillar: `in-app`, `slack`, or `email`. Default `in-app`.
-- **Inbox stage:** always start `flag-only` (propose-then-confirm). The user
-  earns autonomy later through `inbox-management`'s trust ladder — never jump to
-  `autonomous` at setup.
+- **Inbox stage:** default `flag-only` (propose-then-confirm — nothing is
+  archived; the assistant only surfaces what it *would* do). Offer the user a
+  higher start if they want noise cleared from day one:
+  - `standard` — silent archive of **known-safe categories only** (calendar
+    responses, no-reply senders, newsletters), always cross-checked against the
+    safe-list; everything else stays flagged.
+  - `autonomous` — the above plus cold outreach archived by judgment.
+
+  Walk through `inbox-management`'s informed-consent framing for whichever stage
+  they pick, and require an explicit, informed choice before setting anything
+  above `flag-only` — don't infer it from enthusiasm.
 
 For competitor tracking, add each competitor with `admin_copilot_prefs`
 `add_competitor` (`name`, plus `domain`, `watch_urls`, `keywords` when known).
@@ -101,8 +110,10 @@ Create a schedule **only for the pillars the user enabled**, with `schedule_crea
 
 **Inbox triage** (if the user wants it): **do not create the schedule yourself.**
 Run `inbox-management` setup, which creates its own recurring schedule
-(`0 */3 * * 1-5`, execute, reuse) and owns the trust ladder. Confirm stage
-`flag-only`. If the user wants urgent items caught sooner, tighten that triage
+(`0 */3 * * 1-5`, execute, reuse) and owns the trust ladder. Pass the stage the
+user chose in Step 2 — `inbox-management` accepts a caller-chosen starting stage
+(map `flag-only`→0, `standard`→1, `autonomous`→2) and runs its consent framing for
+that stage. If the user wants urgent items caught sooner, tighten that triage
 cadence (e.g. hourly on weekdays).
 
 > `schedule_create` runs as a guardian action. Setup is a guardian flow, so this
@@ -111,7 +122,8 @@ cadence (e.g. hourly on weekdays).
 
 ## Step 4 — Confirm
 
-Summarize what's now live: which jobs, when they fire, where output lands, and
-that inbox triage is propose-then-confirm. Tell them how to change it: "ask me to
-update your admin copilot" (re-runs this skill → `set_prefs`). Done — the copilot
-now works in the background.
+Summarize what's now live: which jobs, when they fire, where output lands, and the
+inbox stage that's in effect (and, if `standard`/`autonomous`, exactly which
+categories will be archived silently). Tell them how to change it: "ask me to
+update your admin copilot" (re-runs this skill → `set_prefs`), or "graduate me" to
+move up the inbox trust ladder. Done — the copilot now works in the background.

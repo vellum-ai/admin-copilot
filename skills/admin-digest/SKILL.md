@@ -26,8 +26,9 @@ metadata:
 
 A sharp, scannable morning brief from a chief of staff. Build only the sections
 you have something useful to say about; cut the rest. Bullets, not paragraphs.
-This is a read-and-summarize pass — it **proposes**, it does not mutate the inbox
-(that's `inbox-management`'s confirmed pipeline). For the general briefing tone
+This is a read-and-summarize pass — it **proposes**, and mutates the inbox only
+when the user approves a proposed batch (see §3; the heavy lifting still lives in
+`inbox-management`'s confirmed pipeline). For the general briefing tone
 and the weather/news/"something interesting" sections, `start-the-day` is
 included; this skill adds the admin spine on top.
 
@@ -47,12 +48,23 @@ From `google-calendar` / `outlook-calendar`:
 - Notable gaps usable for focused work.
 
 ### 3. Inbox triage (propose-then-confirm)
-A **read-only** summary — do not archive or send here:
+The digest *brief* is read-only — it surfaces, it doesn't mutate as a side effect
+of being generated:
 - Count of new/unread since yesterday; what needs a reply.
 - **Urgent** items surfaced individually (customer-at-risk, time-sensitive asks).
-- Proposed actions to confirm: "X newsletters ready to archive", "3 replies I can
-  draft" — offer; act only on the user's go-ahead. The scheduled
-  `inbox-management` run is what actually executes approved triage.
+- Proposed actions to confirm: name each batch concretely — "12 newsletters ready
+  to archive", "3 replies I can draft" — so the user can approve it by name.
+
+**On the user's go-ahead, execute immediately — don't defer to the next scheduled
+run.** When the user approves a proposed batch ("archive them", "archive the
+newsletters", "yes"), archive that batch *now* via `inbox-management`'s archiver:
+`gmail-archive.ts --action archive --query "<the query you proposed>"` (or
+`--message-ids "<ids>"` if you already resolved them). Cross-check the safe-list
+first (`gmail-prefs.ts --action list`), then report back what was actually
+archived. Never auto-send a draft. If the user doesn't respond, leave the
+proposals — the scheduled `inbox-management` run picks up triage at its configured
+stage. Deferring an *approved* archive to "the next run" is the bug, not the
+design: an explicit go-ahead is a confirmation, so honor it.
 
 ### 4. Follow-ups
 Threads where the user owes a reply or is awaiting one and it's gone stale
