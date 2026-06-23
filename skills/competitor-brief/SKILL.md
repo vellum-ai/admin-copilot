@@ -35,6 +35,14 @@ the **`admin_copilot_prefs`** tool — never edit files by hand:
 - Per-competitor last-run snapshots: `get_competitor_snapshot`,
   `save_competitor_snapshot`.
 
+> **If `admin_copilot_prefs` is not in your available tools,** the plugin's tools
+> have not loaded in this assistant session — the state actions will not become
+> reachable by exploring, and searching the filesystem for the storage files will
+> not find them (the path is internal). Do **not** loop or hand-write state. Stop
+> and report one line: "Competitor brief can't run — admin-copilot tools aren't
+> loaded; restart the assistant and try again." Do not fabricate a brief from
+> memory.
+
 ## When the user is curating the list
 
 - **Add:** `admin_copilot_prefs` `add_competitor` with `name` and, when known,

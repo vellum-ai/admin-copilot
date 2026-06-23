@@ -36,6 +36,13 @@ Read delivery preferences once via `admin_copilot_prefs` `get_prefs`
 (`digest.channel`) and deliver there: `in-app` → reply directly; `slack` / `email`
 → hand off to the relevant channel skill.
 
+> **If `admin_copilot_prefs` is not in your available tools,** the plugin's tools
+> have not loaded in this assistant session — `get_prefs` will not become
+> reachable by exploring. Do **not** search the filesystem for a prefs file or
+> read it by hand. Default delivery to `in-app`, skip the competitor section
+> (§5), add a one-line note ("admin-copilot prefs unavailable — using defaults"),
+> and continue. Do not loop.
+
 ## Sections (in priority order)
 
 ### 1. Today at a glance

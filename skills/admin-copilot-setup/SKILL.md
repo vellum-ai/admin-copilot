@@ -36,9 +36,10 @@ way. Four pillars, each independently optional:
 3. **Calendar prep** — surfaced inside the digest (meeting prep, gaps, conflicts).
 4. **Weekly competitor brief** — only what materially changed (`competitor-brief`).
 
-All preferences persist via the **`admin_copilot_prefs`** tool. Proactive jobs
-are real schedules created with **`schedule_create`** — nothing fires at
-startup; everything is created here, with the user present.
+All preferences persist via the **`admin_copilot_prefs`** tool, which owns the
+storage location — never write the prefs file by hand. Proactive jobs are real
+schedules created with **`schedule_create`** — nothing fires at startup;
+everything is created here, with the user present.
 
 > **Posture:** lead with the safe default. The assistant pre-sorts noise and
 > *proposes* actions; the user stays in control. Say this out loud during setup
@@ -63,7 +64,9 @@ credentials. For any pillar that needs it:
 Confirm the user's timezone first (see `time-based-actions` → timezone
 confidence check) so cron fires in their local time.
 
-Persist choices with `admin_copilot_prefs` `set_prefs`. The `prefs_patch` shape:
+Persist choices with the `admin_copilot_prefs` tool, action `set_prefs`, passing
+a `prefs_patch`. This tool is the **only** supported way to write preferences.
+The `prefs_patch` shape:
 
 ```json
 {
@@ -89,6 +92,19 @@ Persist choices with `admin_copilot_prefs` `set_prefs`. The `prefs_patch` shape:
 
 For competitor tracking, add each competitor with `admin_copilot_prefs`
 `add_competitor` (`name`, plus `domain`, `watch_urls`, `keywords` when known).
+
+> **Do not hunt for the prefs file.** It lives at an internal path the tool
+> manages — not model-discoverable by design. Searching the filesystem for it,
+> reading it, or writing it by hand will not work. Always go through
+> `admin_copilot_prefs`.
+>
+> **If `admin_copilot_prefs` is not in your available tools,** the plugin's
+> tools have not loaded in this assistant session — `set_prefs` will not become
+> reachable by exploring. Do **not** improvise a file write or search for a
+> storage directory. Instead, tell the user verbatim: *"The admin-copilot tools
+> aren't loaded yet — restart the assistant, then ask me to set up your admin
+> copilot again."* Then create whatever schedules the user enabled (Step 3) with
+> default preferences so the digest still fires, and stop. Do not loop.
 
 ## Step 3 — Wire the proactive jobs
 
