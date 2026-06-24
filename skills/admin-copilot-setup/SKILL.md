@@ -33,7 +33,10 @@ way. Four pillars, each independently optional:
 2. **Inbox triage** — ongoing (delegated to `inbox-management`; never auto-sends).
    Starts **propose-then-confirm**; the user can opt into automatic archiving of
    known-safe noise at setup or graduate to it later.
-3. **Calendar prep** — surfaced inside the digest (meeting prep, gaps, conflicts).
+3. **Calendar prep** — surfaced inside the digest: meeting prep, gaps, conflicts,
+   focus-block holds, and declines for meetings the user routinely skips.
+   Reversible moves (focus holds on the user's own calendar) can graduate to
+   automatic; anything others see — declines, reschedules — stays propose-only.
 4. **Weekly competitor brief** — only what materially changed (`competitor-brief`).
 
 All preferences persist via the **`admin_copilot_prefs`** tool, which owns the
