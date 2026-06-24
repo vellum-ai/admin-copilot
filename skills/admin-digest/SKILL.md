@@ -92,6 +92,26 @@ proposals — the scheduled `inbox-management` run picks up triage at its config
 stage. Deferring an *approved* archive to "the next run" is the bug, not the
 design: an explicit go-ahead is a confirmation, so honor it.
 
+**Learn from each decision — earn graduation.** Outcomes are how the copilot
+earns autonomy, so record them and act on the pattern rather than keeping a tally.
+- When the user approves, rejects, or ignores a proposed batch, `remember` it
+  concretely — the category and what they decided ("approved archiving
+  newsletters"; "rejected archiving cold outreach from a known vendor"). A
+  rejection is the highest-value signal — capture it the same turn it lands.
+- Before proposing, `recall` how the user has handled this category before. If
+  they've consistently approved a known-safe category with no recent rejections,
+  proactively offer to graduate it: *"You've approved archiving newsletters every
+  time — want me to start doing that silently?"* Acceptance routes through
+  `inbox-management`'s trust ladder (its informed-consent framing, then
+  `gmail-prefs.ts --action set-management-config --stage <n>`), which keeps the
+  explicit gate. Never bump the stage yourself from the digest.
+- A recent rejection tightens the next proposal — drop or narrow that batch
+  instead of re-proposing the same thing, and don't offer to graduate a category
+  the user has pushed back on.
+
+This is judgment over a remembered pattern, not a precision threshold: `recall`,
+weigh what you find, and make the call.
+
 ### 4. Follow-ups
 Threads where the user owes a reply or is awaiting one and it's gone stale
 (via `gmail` search). Flag the oldest first.
