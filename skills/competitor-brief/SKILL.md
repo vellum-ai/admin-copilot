@@ -77,6 +77,20 @@ the **`admin_copilot_prefs`** tool — never edit files by hand:
    only genuine changes: new/changed pricing, product launches or major
    changelog entries, funding or M&A, notable hiring (esp. leadership), and
    positioning/messaging shifts. Ignore cosmetic edits and re-phrasings.
+
+   **Suggest a next move (don't take it).** A finding that just sits there is half
+   the value. For each material finding, decide whether it warrants a concrete
+   response — and if so, *prepare* it, never transmit it:
+   - A competitor pricing or positioning shift sales should know → a **draft**
+     note to the sales/team channel (e.g. a `slack` draft), handed over for the
+     user to send.
+   - A launch or capability worth a closer look → propose a deeper `deep-research`
+     pass, or a calendar hold to dig in.
+   - Something worth keeping in the user's own context → a one-line `remember`.
+
+   Only attach an action when there's a real one; most findings are just signal.
+   No action ever leaves the building on its own — every note is a draft the user
+   sends, consistent with the no-send rule below.
 5. **Write the new snapshot.** `save_competitor_snapshot` with the full object so
    next run can diff against it:
 
@@ -95,10 +109,13 @@ the **`admin_copilot_prefs`** tool — never edit files by hand:
 
    Use the system clock for timestamps (`date -u +%Y-%m-%dT%H:%M:%SZ`).
 6. **Deliver the brief.** Group by competitor; lead with the most material item;
-   one line each, every claim linked to its source. Respect the configured
-   delivery channel (`admin_copilot_prefs` `get_prefs` → `competitorBrief.channel`):
-   in-app means reply directly; for slack/email, hand off to the relevant channel
-   (the `notifications` or messaging skill).
+   one line each, every claim linked to its source. Where a finding earned a
+   suggested move in step 4, append it on its own line as an offer the user can
+   accept by name ("draft a heads-up to #sales", "dig into their new tier") — the
+   prepared draft or proposal, never an action already taken. Respect the
+   configured delivery channel (`admin_copilot_prefs` `get_prefs` →
+   `competitorBrief.channel`): in-app means reply directly; for slack/email, hand
+   off to the relevant channel (the `notifications` or messaging skill).
 
 ## Empty weeks
 

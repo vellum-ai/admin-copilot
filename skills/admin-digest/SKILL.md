@@ -100,8 +100,11 @@ Threads where the user owes a reply or is awaiting one and it's gone stale
 New `competitor-brief` findings since the last digest. For each tracked
 competitor, `admin_copilot_prefs` `get_competitor_snapshot` and surface only
 findings with a recent `firstSeenAt` (since yesterday). One line each, sourced.
-Skip the section entirely if nothing is new — do not run a full competitor pass
-here (that's the weekly brief's job).
+When a finding clearly warrants a response, append the suggested move as an offer
+the user can accept by name (a draft heads-up to a channel, a deeper look) — a
+prepared draft, never an action already taken. Skip the section entirely if
+nothing is new — do not run a full competitor pass here (that's the weekly
+brief's job).
 
 ### 6. Top 3 priorities
 Synthesize the above into the three things most worth the user's attention today,
