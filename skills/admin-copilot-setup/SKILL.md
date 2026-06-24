@@ -102,12 +102,15 @@ For competitor tracking, add each competitor with `admin_copilot_prefs`
 > `admin_copilot_prefs`.
 >
 > **If `admin_copilot_prefs` is not in your available tools,** the plugin's
-> tools have not loaded in this assistant session — `set_prefs` will not become
+> tools have not loaded into this session yet — `set_prefs` will not become
 > reachable by exploring. Do **not** improvise a file write or search for a
-> storage directory. Instead, tell the user verbatim: *"The admin-copilot tools
-> aren't loaded yet — restart the assistant, then ask me to set up your admin
-> copilot again."* Then create whatever schedules the user enabled (Step 3) with
-> default preferences so the digest still fires, and stop. Do not loop.
+> storage directory. A current assistant picks up a freshly installed plugin
+> automatically within a turn or two, so tell the user: *"The admin-copilot
+> tools aren't loaded yet — send me another message and I'll pick them up; if
+> they're still missing after that, restart the assistant and ask me to set up
+> your admin copilot again."* Then create whatever schedules the user enabled
+> (Step 3) with default preferences so the digest still fires, and stop. Do not
+> loop.
 
 ## Step 3 — Wire the proactive jobs
 

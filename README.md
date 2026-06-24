@@ -54,9 +54,9 @@ plugin is itself the enablement gate; there is no separate feature flag.
 ## Local development
 
 ```bash
-# Copy into the workspace the daemon scans, then restart it.
+# Copy into the workspace the assistant scans. A running assistant picks the
+# plugin up automatically on its next turn — no restart needed.
 cp -R admin-copilot "$(assistant daemon workspace)/plugins/admin-copilot"
-# restart the assistant, then:
 assistant plugins list      # → admin-copilot, status: ok
 ```
 
