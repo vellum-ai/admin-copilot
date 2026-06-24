@@ -49,10 +49,29 @@ Read delivery preferences once via `admin_copilot_prefs` `get_prefs`
 One line: number of meetings, first/last commitment, biggest open loop.
 
 ### 2. Calendar & prep
-From `google-calendar` / `outlook-calendar`:
-- Today's meetings with times.
-- Prep flags: docs to review, talking points, anything needing a pre-read.
-- Notable gaps usable for focused work.
+From `google-calendar` / `outlook-calendar`. Don't just summarize the day —
+propose the concrete, reversible moves a chief of staff would make. Read the day
+with `gcal.ts list` + `availability`; for any meeting that needs detail, `gcal.ts
+get`. Surface only the moves worth making; skip the rest.
+
+- **At a glance:** today's meetings with times; notable gaps usable for focused
+  work.
+- **Prep flags:** docs to review, talking points, anything needing a pre-read.
+  Offer to assemble the pre-read.
+- **Conflicts / double-bookings:** surface overlaps and propose a resolution
+  (which to keep, what to move). A reschedule goes out as a *draft* note you hand
+  the user — never sent.
+- **Focus blocks:** propose holding focus time in the biggest usable gap. At
+  flag-only, propose it ("want me to hold 9–11 for deep work?"); once the user has
+  graduated focus-block holds, create it directly with
+  `gcal.ts create … --skip-confirm`. A hold touches only the user's own calendar
+  and is trivially deletable, so it's autonomy-eligible.
+- **Agenda-less meetings:** flag multi-attendee meetings with no agenda or
+  description; offer to draft one (draft only — you don't send it).
+- **Low-value recurring meetings:** if the user routinely skips or declines a
+  recurring meeting, propose declining the next instance with
+  `gcal.ts rsvp --response declined`. Always propose — a decline is visible to the
+  organizer, so it never goes out silently.
 
 ### 3. Inbox triage (propose-then-confirm)
 The digest *brief* is read-only — it surfaces, it doesn't mutate as a side effect
@@ -95,3 +114,8 @@ with a suggested first move.
 - Never claim an action was taken unless it was — proposals are proposals.
 - Every external claim (a competitor finding, an urgent email) is traceable to its
   source.
+- **Autonomy scales with reversibility.** Act directly only on moves that touch
+  the user alone and undo cleanly — holding a focus block on their own calendar,
+  drafting. Anything others see or that's hard to reverse — declines, reschedule
+  or agenda messages, anything leaving the inbox — is proposed, never done
+  silently. The copilot prepares autonomously; a human transmits.
