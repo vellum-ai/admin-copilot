@@ -145,4 +145,7 @@ Summarize what's now live: which jobs, when they fire, where output lands, and t
 inbox stage that's in effect (and, if `standard`/`autonomous`, exactly which
 categories will be archived silently). Tell them how to change it: "ask me to
 update your admin copilot" (re-runs this skill → `set_prefs`), or "graduate me" to
-move up the inbox trust ladder. Done — the copilot now works in the background.
+move up the inbox trust ladder. Note that they don't have to ask — the digest
+learns from which proposals they approve and will offer to graduate a category
+once it has earned it (and back off from anything they reject). Done — the copilot
+now works in the background.
