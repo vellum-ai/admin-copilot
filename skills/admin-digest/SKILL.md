@@ -12,7 +12,7 @@ metadata:
   vellum:
     category: "productivity"
     display-name: "Admin Digest"
-    includes: ["start-the-day"]
+    includes: ["start-the-day", "admin-copilot-prefs"]
     activation-hints:
       - "The morning admin digest schedule fires"
       - "User asks for their chief-of-staff briefing or admin digest"
@@ -33,15 +33,18 @@ and the weather/news/"something interesting" sections, `start-the-day` is
 included; this skill adds the admin spine on top.
 
 Read delivery preferences once via `admin_copilot_prefs` `get_prefs`
-(`digest.channel`) and deliver there: `in-app` → reply directly; `slack` / `email`
-→ hand off to the relevant channel skill.
+(`digest.channel`) — the tool comes from the included `admin-copilot-prefs`
+skill and is called through `skill_execute` — and deliver there: `in-app` →
+reply directly; `slack` / `email` → hand off to the relevant channel skill.
 
-> **If `admin_copilot_prefs` is not in your available tools,** the plugin's tools
-> have not loaded into this session yet (a later run picks them up automatically)
-> — `get_prefs` will not become reachable by exploring. Do **not** search the
-> filesystem for a prefs file or read it by hand. Default delivery to `in-app`,
-> skip the competitor section (§5), add a one-line note ("admin-copilot prefs
-> unavailable — using defaults"), and continue. Do not loop.
+> **If `skill_execute` reports `admin_copilot_prefs` as unknown or not
+> allowed,** the `admin-copilot-prefs` skill has not projected into this
+> session — `get_prefs` will not become reachable by exploring. Try
+> `skill_load` with `skill: "admin-copilot-prefs"` once; if it still fails, do
+> **not** search the filesystem for a prefs file or read it by hand. Default
+> delivery to `in-app`, skip the competitor section (§5), add a one-line note
+> ("admin-copilot prefs unavailable — using defaults"), and continue. Do not
+> loop.
 
 ## Sections (in priority order)
 
