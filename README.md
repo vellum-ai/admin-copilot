@@ -31,25 +31,29 @@ on the proactive schedules.
 
 ## Surfaces
 
-| Surface | Path                           | What it does                                                                                                                |
-| ------- | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
-| Hook    | `hooks/init.ts`                | Seeds `prefs.json` + `competitor-runs/` and captures the storage dir for the prefs tool. Pure file I/O — no boot-time work. |
-| Tool    | `tools/admin_copilot_prefs.ts` | Low-risk read/write of preferences and the competitor list/snapshots in the plugin's own data dir.                          |
-| Skill   | `skills/admin-copilot-setup/`  | One-time guided onboarding: capture preferences, connect accounts, and register the proactive schedules.                   |
-| Skill   | `skills/admin-digest/`         | The unified morning briefing (calendar, inbox triage summary, competitor deltas, follow-ups).                              |
-| Skill   | `skills/competitor-brief/`     | Recurring competitor monitoring with a content-hash pre-filter + model-judged materiality + week-over-week diff.           |
+| Surface | Path                            | What it does                                                                                                      |
+| ------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Skill   | `skills/admin-copilot-setup/`   | One-time guided onboarding: capture preferences, connect accounts, and register the proactive schedules.           |
+| Skill   | `skills/admin-digest/`          | The unified morning briefing (calendar, inbox triage summary, competitor deltas, follow-ups).                       |
+| Skill   | `skills/competitor-brief/`      | Recurring competitor monitoring with a content-hash pre-filter + model-judged materiality + week-over-week diff.    |
+| Skill   | `skills/admin-copilot-prefs/`   | The shared state layer: ships the `admin_copilot_prefs` tool (via `TOOLS.json`), included by the three skills above. |
 
-Proactivity is delivered entirely by **schedules** created at setup time,
-model-mediated — never at daemon startup. There are no per-turn hooks, so ordinary
-chat carries zero added prompt cost.
+The plugin is **skills-only** — no hooks and no always-on tools. The
+`admin_copilot_prefs` tool is declared in the `admin-copilot-prefs` skill's
+`TOOLS.json`, so it registers only while an admin-copilot skill is active in a
+conversation (invoked through `skill_execute`, executed in the skill sandbox)
+and adds zero prompt cost to ordinary chat. Proactivity is delivered entirely
+by **schedules** created at setup time, model-mediated — never at daemon
+startup.
 
 ## Configuration
 
-All preferences live in `<pluginStorageDir>/prefs.json`, seeded by the `init` hook
-and edited through the `admin_copilot_prefs` tool / the setup skill. See
-`src/prefs.ts` for the shape and defaults. No credentials are owned by the plugin —
-Gmail/Calendar auth stays with the assistant's existing connectors. Installing the
-plugin is itself the enablement gate; there is no separate feature flag.
+All preferences live in `prefs.json` in the plugin's data directory, seeded on
+first use of the `admin_copilot_prefs` tool and edited only through it / the
+setup skill. See `skills/admin-copilot-prefs/tools/prefs.ts` for the shape and
+defaults. No credentials are owned by the plugin — Gmail/Calendar auth stays
+with the assistant's existing connectors. Installing the plugin is itself the
+enablement gate; there is no separate feature flag.
 
 ## Local development
 

@@ -12,6 +12,7 @@ metadata:
   vellum:
     category: "productivity"
     display-name: "Competitor Brief"
+    includes: ["admin-copilot-prefs"]
     activation-hints:
       - "User wants ongoing competitor or market monitoring"
       - "User asks what changed with a competitor recently"
@@ -29,19 +30,22 @@ changed** since last time. The value is signal, not a re-scrape: a good brief is
 short, dated, and sourced.
 
 State lives in the `admin-copilot` plugin's storage and is read/written through
-the **`admin_copilot_prefs`** tool — never edit files by hand:
+the **`admin_copilot_prefs`** tool from the included `admin-copilot-prefs`
+skill, called via `skill_execute` — never edit files by hand:
 
 - The tracked list: `list_competitors`, `add_competitor`, `remove_competitor`.
 - Per-competitor last-run snapshots: `get_competitor_snapshot`,
   `save_competitor_snapshot`.
 
-> **If `admin_copilot_prefs` is not in your available tools,** the plugin's tools
-> have not loaded into this session yet — the state actions will not become
-> reachable by exploring, and searching the filesystem for the storage files will
-> not find them (the path is internal). Do **not** loop or hand-write state. Stop
-> and report one line: "Competitor brief can't run yet — admin-copilot tools
-> aren't loaded; a later run picks them up automatically, or restart the
-> assistant to load them now." Do not fabricate a brief from memory.
+> **If `skill_execute` reports `admin_copilot_prefs` as unknown or not
+> allowed,** the `admin-copilot-prefs` skill has not projected into this
+> session — the state actions will not become reachable by exploring, and
+> searching the filesystem for the storage files will not find them (the path
+> is internal). Try `skill_load` with `skill: "admin-copilot-prefs"` once; if
+> it still fails, do **not** loop or hand-write state. Stop and report one
+> line: "Competitor brief can't run yet — the admin-copilot state tool isn't
+> loading; restart the assistant to fix it." Do not fabricate a brief from
+> memory.
 
 ## When the user is curating the list
 

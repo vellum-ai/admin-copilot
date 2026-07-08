@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "tools": [
+    {
+      "name": "admin_copilot_prefs",
+      "description": "Read and write the admin-copilot plugin's stored preferences and competitor list/snapshots (in the plugin's own data dir). Actions: get_prefs, set_prefs (prefs_patch), list_competitors, add_competitor (name, domain?, watch_urls?, keywords?), remove_competitor (name), get_competitor_snapshot (name), save_competitor_snapshot (snapshot). Used by the admin-copilot setup, digest, and competitor-brief skills. Does not send email, touch the inbox, or call external services.",
+      "category": "productivity",
+      "risk": "low",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "get_prefs",
+              "set_prefs",
+              "list_competitors",
+              "add_competitor",
+              "remove_competitor",
+              "get_competitor_snapshot",
+              "save_competitor_snapshot"
+            ],
+            "description": "Which operation to perform."
+          },
+          "prefs_patch": {
+            "type": "object",
+            "description": "set_prefs: partial preferences to deep-merge (digest, inbox, competitorBrief, competitors)."
+          },
+          "name": {
+            "type": "string",
+            "description": "Competitor name for add/remove/get/save actions."
+          },
+          "domain": {
+            "type": "string",
+            "description": "add_competitor: primary domain."
+          },
+          "watch_urls": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "add_competitor: specific pages worth checking."
+          },
+          "keywords": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "add_competitor: topics to weight when judging materiality."
+          },
+          "snapshot": {
+            "type": "object",
+            "description": "save_competitor_snapshot: the full snapshot { competitor, lastRunAt, sources[], findings[] }."
+          }
+        },
+        "required": ["action"]
+      },
+      "executor": "tools/prefs.ts",
+      "execution_target": "sandbox"
+    }
+  ]
+}

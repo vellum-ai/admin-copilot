@@ -13,7 +13,7 @@ metadata:
     category: "productivity"
     display-name: "Admin Copilot Setup"
     user-invocable: true
-    includes: ["inbox-management", "start-the-day"]
+    includes: ["inbox-management", "start-the-day", "admin-copilot-prefs"]
     activation-hints:
       - "User wants to set up or enable a chief of staff / admin assistant"
       - "User wants the assistant to proactively handle email, calendar, and a daily digest"
@@ -39,10 +39,11 @@ way. Four pillars, each independently optional:
    automatic; anything others see — declines, reschedules — stays propose-only.
 4. **Weekly competitor brief** — only what materially changed (`competitor-brief`).
 
-All preferences persist via the **`admin_copilot_prefs`** tool, which owns the
-storage location — never write the prefs file by hand. Proactive jobs are real
-schedules created with **`schedule_create`** — nothing fires at startup;
-everything is created here, with the user present.
+All preferences persist via the **`admin_copilot_prefs`** tool from the
+included `admin-copilot-prefs` skill — call it through `skill_execute` — which
+owns the storage location; never write the prefs file by hand. Proactive jobs
+are real schedules created with **`schedule_create`** — nothing fires at
+startup; everything is created here, with the user present.
 
 > **Posture:** lead with the safe default. The assistant pre-sorts noise and
 > *proposes* actions; the user stays in control. Say this out loud during setup
@@ -67,9 +68,9 @@ credentials. For any pillar that needs it:
 Confirm the user's timezone first (see `time-based-actions` → timezone
 confidence check) so cron fires in their local time.
 
-Persist choices with the `admin_copilot_prefs` tool, action `set_prefs`, passing
-a `prefs_patch`. This tool is the **only** supported way to write preferences.
-The `prefs_patch` shape:
+Persist choices with the `admin_copilot_prefs` tool (via `skill_execute`),
+action `set_prefs`, passing a `prefs_patch`. This tool is the **only** supported
+way to write preferences. The `prefs_patch` shape:
 
 ```json
 {
@@ -101,16 +102,15 @@ For competitor tracking, add each competitor with `admin_copilot_prefs`
 > reading it, or writing it by hand will not work. Always go through
 > `admin_copilot_prefs`.
 >
-> **If `admin_copilot_prefs` is not in your available tools,** the plugin's
-> tools have not loaded into this session yet — `set_prefs` will not become
-> reachable by exploring. Do **not** improvise a file write or search for a
-> storage directory. A current assistant picks up a freshly installed plugin
-> automatically within a turn or two, so tell the user: *"The admin-copilot
-> tools aren't loaded yet — send me another message and I'll pick them up; if
-> they're still missing after that, restart the assistant and ask me to set up
-> your admin copilot again."* Then create whatever schedules the user enabled
-> (Step 3) with default preferences so the digest still fires, and stop. Do not
-> loop.
+> **If `skill_execute` reports `admin_copilot_prefs` as unknown or not
+> allowed,** the `admin-copilot-prefs` skill has not projected into this
+> session — `set_prefs` will not become reachable by exploring. Do **not**
+> improvise a file write or search for a storage directory. Load the skill
+> explicitly (`skill_load` with `skill: "admin-copilot-prefs"`) and retry once.
+> If it still fails, tell the user: *"The admin-copilot state tool isn't
+> loading — restart the assistant, then ask me to set up your admin copilot
+> again."* Then create whatever schedules the user enabled (Step 3) with
+> default preferences so the digest still fires, and stop. Do not loop.
 
 ## Step 3 — Wire the proactive jobs
 
